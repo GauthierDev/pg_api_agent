@@ -1,5 +1,6 @@
 import os
 
+
 class GlobalVariables:
     _instance = None
     _initialized = False
@@ -20,10 +21,14 @@ class GlobalVariables:
     def _initialize_global_variables(self):
         # Initialisation des variables globales à partir de l'OS ou autre source
         for variable, default_value in self._variable_defaults.items():
-            setattr(self, "_" + variable.lower(), os.environ.get(variable, default_value))
+            os_value = os.environ.get(variable)
+            if os_value is not None and os_value != '':
+                setattr(self, "_" + variable.lower(), os_value)
+            else:
+                setattr(self, "_" + variable.lower(), default_value)
 
     def reset_global_variables(self):
-        # Réinitialisation des variables globales avec les nouvelles valeurs des variables d'environnement
+        # Mettre à jour les variables globales avec les nouvelles valeurs des variables d'environnement
         self._initialize_global_variables()
 
     @classmethod
